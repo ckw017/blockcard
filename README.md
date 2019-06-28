@@ -25,6 +25,10 @@ Install the latest version from PyPI with `pip install blockcard`.
 
 ## Usage
 
+### Displaying headers and message of a block:
+
+`python -m blockcard -d target.blk`
+
 ### Generating the first block in a chain
 
 `python -m blockcard -g`
@@ -32,10 +36,6 @@ Install the latest version from PyPI with `pip install blockcard`.
 ### Generating subsequent blocks in the chain:
 
 `python -m blockcard -g parent.blk`
-
-### Displaying headers and metadata of a block:
-
-`python -m blockcard -d target.blk`
 
 (For longer messages you may want to pipe this into a pager like `less`)
 
@@ -50,17 +50,5 @@ Install the latest version from PyPI with `pip install blockcard`.
 `python -m blockcard -C target.blk`
 
 (All .blk files should be stored in current working directory)
-
-## Examples
-
-### Starting a new chain
-
-![](examples/svg/0.svg)
-
-### Displaying an existing .bkc file
-
-![](examples/svg/1.svg)
-
-### Appending to an existing chain and checking blocks recursively
 
 ![](examples/svg/2.svg)
