@@ -11,10 +11,6 @@
     - [ Checking validity of blocks](#checking-validity-of-blocks)
       - [ Check current block](#check-current-block)
       - [ Check all blocks in chain recursively](#check-all-blocks-in-chain-recursively)
-  - [ Examples](#examples)
-    - [ Starting a new chain](#starting-a-new-chain)
-    - [ Displaying an existing .bkc file](#displaying-an-existing-bkc-file)
-    - [ Appending to an existing chain and checking blocks recursively](#appending-to-an-existing-chain-and-checking-blocks-recursively)
 
 ## Introduction
 A pure Python implementation of the blockcard protocol's proof-of-thought system for gift transactions. Read the full paper [here](https://drive.google.com/file/d/1R2kP6jt5FqH2T9jSR1icVfcJkdFsLUht/view?usp=sharing).
@@ -50,5 +46,3 @@ Install the latest version from PyPI with `pip install blockcard`.
 `python -m blockcard -C target.blk`
 
 (All .blk files should be stored in current working directory)
-
-![](examples/svg/2.svg)
