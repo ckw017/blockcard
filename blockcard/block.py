@@ -1,7 +1,15 @@
+from __future__ import print_function
+
+try:
+    input = raw_input
+except NameError:
+    pass
+
 import os
 import traceback
 import time
 import sys
+from dateutil import parser
 from pytz import utc
 from hashlib import sha256
 from datetime import datetime
@@ -48,9 +56,13 @@ class Block:
                 parent = Block(parent_path)
                 self.parent_hash = parent.current_hash
                 self.nonce = parent.nonce
-            target_date = '{}+00:00'.format(input('Timestamp? (YYYY-mm-dd): '))
-            dt = datetime.strptime(target_date, '%Y-%m-%d%z')
-            self.timestamp = int(dt.timestamp()).to_bytes(8, 'big')
+            target_date = '{} 00:00+00:00'.format(input('Timestamp? (YYYY-mm-dd): '))
+            dt = parser.parse(target_date)
+            try:
+                self.timestamp = int(dt.timestamp()).to_bytes(8, 'big')
+            except:
+                delta = (dt - datetime(1970, 1, 1, tzinfo=utc))
+                self.timestamp = int(delta.total_seconds()).to_bytes(8, 'big')
             d = int(input("Difficulty (recipient age): "))
             self.set_bounds(d)
             self.difficulty = d.to_bytes(1, 'big')
@@ -156,7 +168,7 @@ class Block:
             self.metadata.decode('utf-8')
         ])
 
-    def print(self):
+    def print_block(self):
         print(str(self))
 
     def save(self, dir_path=''):

@@ -20,10 +20,10 @@ if sum(flags) != 1:
 if args.display:
     if not args.FILE:
         raise ValueError("FILE required for --display")
-    Block(block_path=args.FILE).print()
+    Block(block_path=args.FILE).print_block()
 if args.generate:
     b = Block(parent_path=args.FILE)
-    b.print()
+    b.print_block()
     print('Saving block...')
     b.save()
 if args.check:
