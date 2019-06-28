@@ -1,0 +1,179 @@
+\documentclass[
+parskip=half
+]{article}
+
+
+
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+
+\usepackage{listings}
+\usepackage{parcolumns}
+
+\title{The Blockcard Protocol: It's the Proof-of-Thought that Counts}
+
+
+\author{
+  Robert S. Adlemir \\
+  Tree University\\
+  Department of Computer Science \\
+  \texttt{rsa@cs.tree.edu} \\
+ \And 
+  Chris K. Wong \\
+  UC Berkeley\\
+  Department of Computer Arts \\
+  \texttt{chriskw@berkeley.edu} \\
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We identify a major security flaw in modern gift transaction protocol that allows for malicious entities to send questionable metadata to insecure\footnote{Multiple definitions apply here.} recipients. To address these weaknesses we introduce the Blockcard protocol, a novel variant of Blockchain technology that uses an asymmetric proof-of-work CPU cost functions over payload metadata to provide a cryptographically secure and efficient method of verifying that gift-givers thought enough about the recipients payload or lack thereof for it to count. This has the advantage of making it computationally infeasible and socially awkward for adversarial gift-givers to double-spend, spoof, or precompute their celebratory thoughts.
+
+\end{abstract}
+
+\section{Introduction}
+ In the most recent set of standards for gift transaction protocol it is not uncommon for a gift-giver to send metadata with an empty or completely randomized payload. This functions as an acknowledgement of the recipient's special occasion and is accepted under the current standard outlined in RFC6592\footnote{Referred to in the context of gift transactions as the “It's the thought that counts” standard.} \cite{rfc6592}. For example, the metadata in Figure 1 can pass through the system without an associated payload.
+
+\begin{lstlisting}[
+caption={Gift metadata for empty payload\protect\footnotemark},
+linewidth=5in,
+xleftmargin=.175\textwidth]
+Dear Bob,
+
+Happy belated birthday! I didn't have the chance to get you
+a gift this year, but hey, it's the thought that counts!
+I know you've had some challenges to overcome recently, but 
+if anyone can get through it its you!
+
+Best regards,
+Alice
+\end{lstlisting}
+\footnotetext{The "belated" flag on line 3 is an optional header to denote a deferred message. It's inclusion is not necessary in general for empty payloads.}
+
+In these cases, the sender encapsulates the metadata, usually in a nice envelope, and relays it to the recipient without a payload. Which is totally fine. I mean Alice and Bob are both busy people, there’s no need to pick out a gift for every single occasion. And I mean Bob gets it, Alice is pretty occupied with work these days. Lately Bob has been trying to clean out his place anyway, so he probably wouldn't have appreciated the extra clutter. It’s all cool, is what I’m trying to say here.
+
+\newpage
+
+\section{Problem Statement}
+Anyway, this procedure works correctly for well-intentioned senders under the assumption that they did in fact put in the implicit amount of thought required for the sentiment to count. However, this protocol is open to exploit against adversaries who try to send unthoughtful metadata across multiple recipients. Consider the messages A and B in Figures 2 and 3 respectively.
+
+\noindent
+\begin{minipage}{.45\textwidth}
+\begin{lstlisting}[caption=Message A,frame=tlrb]{Name}
+Hey Alice,
+
+Happy birthday! How have you been? Sorry
+I couldn't get you something special
+this year, but it's the thought that
+counts! I'm sure it's been a busy year 
+for you, with all the recent promotions 
+and the big merger coming up. 
+
+
+Anyway, hang in there, I know you're
+doing your best!
+
+Yours truly,
+Eve
+\end{lstlisting}
+Associated Payload: \$100 Best Buy Gift Card
+\end{minipage}
+\hfill
+\noindent
+\begin{minipage}{.45\textwidth}
+\begin{lstlisting}[
+caption={Message B},
+frame=tlrb,
+firstnumber=1
+]{Name}
+Hey Bob,
+
+Happy birthday! How have you been? Sorry
+I couldn't get you something special
+this year, but it's the thought that
+counts! I'm sure it's been a busy year 
+for you, with all the investors backing 
+out of your impractical blockchain 
+idea and the divorce with Carol.
+
+Anyway, hang in there, I know you're 
+doing your best!
+
+Yours truly,
+Eve
+\end{lstlisting}
+Associated Payload: \$20 Starbucks Gift Card\footnotemark
+\end{minipage}
+\vspace{5mm}
+\footnotetext{\$6.54 balance remaining at time of receipt.}
+
+Upon close examination, it’s clear that Eve didn’t put a complete thought into each message but instead used a common template for both messages effectively achieving a double-spend of thought\footnote{Doublethink, for short.}. Formally, she puts an average of $(1 + \epsilon) / 2$ units of thought into each message where the denominator represents the initial one unit of thought\footnote{Which, let's be honest, probably wasn't even that much.} put into generating the template and an additional $0 \leq \epsilon < 1$ of thought to adapt the template to a new recipient. 
+
+More generally we can say that for $n$ recipients involved in a given template attack, each recipient receives an average $\frac{1 + (n-1)\epsilon}{n}$ units of thought. This works out to a real valued amount of thought $\theta$ bound by the inequality $0 < \frac{1}{n} \leq \theta \leq \frac{1}{n} + \frac{n-1}{n}\epsilon < 1$. Because this range of values is continuous in the real numbers its cardinality is beyond countably infinite and therefore does not count.
+
+To further complicate matters, Alice’s birthday comes significantly earlier in the year, so Bob is definitely getting a modified version of Alice’s card. And I mean really, why did Eve choose to bring those things up? That’s just so inconsiderate. Whatever, I'm not going to dwell on it.
+
+
+\newpage
+\section{Proposal}
+We propose the Blockcard protocol to mitigate this attack vector. Blockcard is implemented as a series of blocks made up of a set of fixed length headers followed by a variable length record where users can place their metadata. The formats of the headers are shown in Table 1. Blocks are appended in an alternating fashion such that computation cannot begin until the sender receives the latest block on the day of their special occasion.
+
+\begin{table}
+  \caption{Header format}
+  \centering
+  \begin{tabular}{p{30mm} p{15mm} p{80mm}}
+    \toprule
+    Header     & Size    & Purpose \\ 
+    \midrule
+Hash of the previous blocks header & 32B & Prevents precomputation of future blocks before completion of pending block \\
+Hash of the current block’s metadata & 32B & Prevents precomputation of headers for arbitrary messages \\
+Nonce & 32B & Incremented (starting from zero, and carrying over starting position between blocks) to vary the header's  hash\\ Timestamp & 8B & Unix timestamp of expected time of receipt (unsigned 64-bit integer)\\
+Difficulty & 1B & Determines the range of values within which the hash must fall (unsigned 8-bit integer) \\
+    \bottomrule
+  \end{tabular}
+ 
+\end{table}
+
+\subsection{Hashes}
+The hash used in the first two fields are the same double SHA-256 typically used in the popular Bitcoin protocol. The hash of the previous blocks header allows us to chain together blocks in such a way that it is infeasible to censor old messages\footnotemark without forcing the start of a new chain or breaking SHA-256\footnotetext{Knowledge of this property may help to deter adversaries from sending insensitive metadata (see Figure 3) or at the very incentivize them to take the time to be a little more considerate.}. Since SHA-256 is thought to be a secure one-way function, template attacks like the one shown in Figures 2 and 3 can no longer be used to efficiently perform doublethinks as a new proof-of-thought will have to be completed for each message. New blocks can be checked efficiently by computing the header hash and verifying against the difficulty constraints.
+
+\subsection{Nonce}
+The nonce differs from existing protocols by requiring that iteration begins at the same position as the final value from the previous block. This allows the nonce to serve as a counter to indicate the cumulative amount of thought that has been invested into a chain of transactions. In order to take advantage of parallel computation it is recommended that that individual workers are either passed their nonce value from a main thread that manages the current state of the nonce, or that each thread maintain its own offset copy of the nonce and increase by the total number of workers on each iteration.
+
+% If difficulty is three we want in range of 0001_0000 to 0001_1111, so between 10^4 and 10^5 - 1
+
+\subsection{Timestamp}
+The timestamp field serves as a weak identifier of the recipient and reminder of block computation deadline. The probability of zero collisions falls below 50\% for groups with more than 23 individuals\cite{wagner2002generalized} but is sufficient for common use where networks tend to be sparse ($\approx4.1$ close contacts per person) \cite{mac2016calling}.
+
+\subsection{Difficulty of Next Block}
+Difficulty is used to determine the bounds for the hash value. We differ from other block chain systems by enforcing that the difficulty be equivalent to the age of the recipient at the expected time of message receipt. The difficulty $d$ constrains the value of the hash to be in the range $[2^{255 - d}, 2^{255 - d + 1})$ when interpreted as a big-endian 256-bit integer. This forces the number of leading zeros in the base 2 representation to be exactly the recipient's age. This implicitly acknowledges the recipients age in a semi-obfuscated format, in case it happens to be a sensitive topic, and has the advantage of naturally increasing in difficulty over time. On average, the sender will be required to compute $2^{d+1}$ hashes to find a valid header.
+
+\section{Implementation}
+ A working implementation of the protocol can be found at \href{https://github.com/ckw017/blockcard}{\underline{https://github.com/ckw017/blockcard}}.
+
+\section{Future Work}
+ Further research has begun into related methodologies to secure seasonal thank you notes and get-well-soon cards.
+
+ 
+\bibliographystyle{unsrt}
+\bibliography{references} 
+
+\end{document}
