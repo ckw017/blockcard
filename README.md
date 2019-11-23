@@ -46,3 +46,14 @@ Install the latest version from PyPI with `pip install blockcard`.
 `python -m blockcard -C target.blk`
 
 (All .blk files should be stored in current working directory)
+
+## Animated demos
+
+### Mining genesis block
+![](https://chriskw.xyz/images/blockcard/0.svg)
+
+### Displaying a message
+![](https://chriskw.xyz/images/blockcard/1.svg)
+
+### Appending a block
+![](https://chriskw.xyz/images/blockcard/2.svg)
